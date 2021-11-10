@@ -266,8 +266,7 @@ static ssize_t shofer_read(struct file *filp, char __user *ubuf, size_t count,
 	struct kfifo *fifo = &out_buff->fifo;
 	unsigned int copied;
 
-	if (!spin_trylock(&out_buff->key))
-		return -EBUSY;
+	spin_lock(&out_buff->key);
 
 	dump_buffer("out_dev-end:out_buff:", out_buff);
 
@@ -307,6 +306,7 @@ static long control_ioctl (struct file *filp, unsigned int cmd, unsigned long ar
 	if (!cmd)
 		return -EINVAL;
 
+	/* copy cmd bytes from in_buff to out_buff */
 	/* todo (similar to timer) */
 
 	return retval;
@@ -322,11 +322,8 @@ static void timer_function(struct timer_list *t)
 	int got;
 
 	/* get locks on both buffers */
-	if (!spin_trylock(&out_buff->key))
-		goto no_locks;
-	if (!spin_trylock(&in_buff->key)) {
-		goto out_locked;
-	}
+	spin_lock(&out_buff->key);
+	spin_lock(&in_buff->key);
 
 	dump_buffer("timer-start:in_buff", in_buff);
 	dump_buffer("timer-start:out_buff", out_buff);
@@ -354,10 +351,8 @@ static void timer_function(struct timer_list *t)
 	dump_buffer("timer-end:out_buff", out_buff);
 
 	spin_unlock(&in_buff->key);
-out_locked:
 	spin_unlock(&out_buff->key);
 
-no_locks:
 	/* reschedule timer for period */
 	mod_timer(t, jiffies + msecs_to_jiffies(TIMER_PERIOD));
 }

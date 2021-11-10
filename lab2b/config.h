@@ -18,10 +18,6 @@
 
 #define BUFFER_SIZE	64
 
-#define CMD_COPY_ONE	"copy one"
-#define CMD_COPY_ALL	"copy all"
-#define CMD_LEN		8
-
 #define TIMER_PERIOD	5000 /* 5000 ms */
 
 /* Circular buffer */

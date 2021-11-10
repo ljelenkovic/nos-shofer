@@ -348,10 +348,9 @@ static ssize_t shofer_read(struct file *filp, char __user *ubuf, size_t count,
 		}
 	}
 
-	if (!spin_trylock(&buffer->key)) {
-		dump_buffer("read-end", shofer, buffer);
-		spin_unlock(&buffer->key);
-	}
+	spin_lock(&buffer->key);
+	dump_buffer("read-end", shofer, buffer);
+	spin_unlock(&buffer->key);
 
 	kfree(buf);
 
@@ -418,10 +417,9 @@ static ssize_t shofer_write(struct file *filp, const char __user *ubuf,
 		retval = wqd.copied;
 	}
 
-	if (!spin_trylock(&buffer->key)) {
-		dump_buffer("write-end", shofer, buffer);
-		spin_unlock(&buffer->key);
-	}
+	spin_lock(&buffer->key);
+	dump_buffer("write-end", shofer, buffer);
+	spin_unlock(&buffer->key);
 
 	kfree(buf);
 
@@ -446,12 +444,10 @@ static void timer_function(struct timer_list *t)
 	struct kfifo *fifo;
 
 	buffer = list_first_entry(&buffers_list, struct buffer, list);
-	if (!spin_trylock(&buffer->key)) {
-		fifo = &buffer->fifo;
-		kfifo_put(fifo, 'T');
-		spin_unlock(&buffer->key);
-	}
-	/* else - do nothing, process already locked it */
+	spin_lock(&buffer->key);
+	fifo = &buffer->fifo;
+	kfifo_put(fifo, 'T');
+	spin_unlock(&buffer->key);
 
 	/* reschedule timer for period */
 	mod_timer(t, jiffies + msecs_to_jiffies(TIMER_PERIOD));
