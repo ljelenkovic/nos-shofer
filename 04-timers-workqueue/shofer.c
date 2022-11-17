@@ -28,6 +28,7 @@
 #include <linux/interrupt.h>
 #include <linux/kfifo.h>
 #include <linux/log2.h>
+#include <linux/uaccess.h>
 
 #include "config.h"
 
