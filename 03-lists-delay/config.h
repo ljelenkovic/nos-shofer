@@ -39,10 +39,10 @@ struct shofer_dev {
 
 
 #define klog(LEVEL, format, ...)	\
-printk ( LEVEL "[shofer] %d: " format "\n", __LINE__, ##__VA_ARGS__)
+printk(LEVEL "[shofer] %d: " format "\n", __LINE__, ##__VA_ARGS__)
 
-//printk ( LEVEL "[shofer]%s:%d]" format "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-//printk ( LEVEL "[shofer]%s:%d]" format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__)
+//printk(LEVEL "[shofer]%s:%d]" format "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+//printk(LEVEL "[shofer]%s:%d]" format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__)
 
 //#define SHOFER_DEBUG
 

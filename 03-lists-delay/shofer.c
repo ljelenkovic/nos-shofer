@@ -164,7 +164,7 @@ static struct buffer *buffer_create(size_t size, int *retval)
 	*retval = kfifo_init(&buffer->fifo, buffer + 1, size);
 	if (*retval) {
 		kfree(buffer);
-		klog(KERN_WARNING, "kfifo_init failed\n");
+		klog(KERN_WARNING, "kfifo_init failed");
 		return NULL;
 	}
 	buffer->id = buffer_id++;
@@ -187,7 +187,7 @@ static struct shofer_dev *shofer_create(dev_t dev_no,
 	struct shofer_dev *shofer = kmalloc(sizeof(struct shofer_dev), GFP_KERNEL);
 	if (!shofer){
 		*retval = -ENOMEM;
-		klog(KERN_WARNING, "kmalloc failed\n");
+		klog(KERN_WARNING, "kmalloc failed");
 		return NULL;
 	}
 	memset(shofer, 0, sizeof(struct shofer_dev));
@@ -239,7 +239,7 @@ static ssize_t shofer_read(struct file *filp, char __user *ubuf, size_t count,
 
 	retval = kfifo_to_user(fifo, (char __user *) ubuf, count, &copied);
 	if (retval)
-		klog(KERN_WARNING, "shofer:kfifo_to_user failed\n");
+		klog(KERN_WARNING, "shofer:kfifo_to_user failed");
 	else
 		retval = copied;
 
@@ -268,7 +268,7 @@ static ssize_t shofer_write(struct file *filp, const char __user *ubuf,
 
 	retval = kfifo_from_user(fifo, (char __user *) ubuf, count, &copied);
 	if (retval)
-		klog(KERN_WARNING, "shofer:kfifo_from_user failed\n");
+		klog(KERN_WARNING, "shofer:kfifo_from_user failed");
 	else
 		retval = copied;
 

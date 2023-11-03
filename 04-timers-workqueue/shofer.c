@@ -181,7 +181,7 @@ static struct buffer *buffer_create(size_t size, int *retval)
 	*retval = kfifo_init(&buffer->fifo, buffer + 1, size);
 	if (*retval) {
 		kfree(buffer);
-		klog(KERN_WARNING, "kfifo_init failed\n");
+		klog(KERN_WARNING, "kfifo_init failed");
 		return NULL;
 	}
 	buffer->id = buffer_id++;
@@ -207,7 +207,7 @@ static struct shofer_dev *shofer_create(dev_t dev_no,
 	shofer = kmalloc(sizeof(struct shofer_dev), GFP_KERNEL);
 	if (!shofer){
 		*retval = -ENOMEM;
-		klog(KERN_WARNING, "kmalloc failed\n");
+		klog(KERN_WARNING, "kmalloc failed");
 		return NULL;
 	}
 	memset(shofer, 0, sizeof(struct shofer_dev));
@@ -316,7 +316,7 @@ static ssize_t shofer_read(struct file *filp, char __user *ubuf, size_t count,
 
 	buf = kmalloc(count, GFP_KERNEL);
 	if (!buf){
-		klog(KERN_WARNING, "kmalloc failed\n");
+		klog(KERN_WARNING, "kmalloc failed");
 		return -ENOMEM;
 	}
 
@@ -343,7 +343,7 @@ static ssize_t shofer_read(struct file *filp, char __user *ubuf, size_t count,
 		wait_for_completion(&wq_reader);
 		retval = wqd.copied;
 		if (copy_to_user(ubuf, buf, wqd.copied)) {
-			klog(KERN_WARNING, "copy_to_user failed\n");
+			klog(KERN_WARNING, "copy_to_user failed");
 			kfree(buf);
 			return -EFAULT;
 		}
@@ -388,11 +388,11 @@ static ssize_t shofer_write(struct file *filp, const char __user *ubuf,
 	/* first, copy data from user space to 'buf' */
 	buf = kmalloc(count, GFP_KERNEL);
 	if (!buf){
-		klog(KERN_WARNING, "kmalloc failed\n");
+		klog(KERN_WARNING, "kmalloc failed");
 		return -ENOMEM;
 	}
 	if (copy_from_user(buf, ubuf, count)) {
-		klog(KERN_WARNING, "copy_from_user failed\n");
+		klog(KERN_WARNING, "copy_from_user failed");
 		kfree(buf);
 		return -EFAULT;
 	}

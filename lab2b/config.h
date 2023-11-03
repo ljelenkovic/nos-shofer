@@ -11,6 +11,8 @@
 
 #pragma once
 
+#ifdef SHOFER_C
+
 #define DRIVER_NAME 	"shofer"
 
 #define AUTHOR		"Leonardo Jelenkovic"
@@ -35,10 +37,10 @@ struct shofer_dev {
 };
 
 #define klog(LEVEL, format, ...)	\
-printk ( LEVEL "[shofer] %d: " format "\n", __LINE__, ##__VA_ARGS__)
+printk(LEVEL "[shofer] %d: " format "\n", __LINE__, ##__VA_ARGS__)
 
-//printk ( LEVEL "[shofer]%s:%d]" format "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-//printk ( LEVEL "[shofer]%s:%d]" format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__)
+//printk(LEVEL "[shofer]%s:%d]" format "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+//printk(LEVEL "[shofer]%s:%d]" format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__)
 
 //#define SHOFER_DEBUG
 
@@ -48,3 +50,16 @@ printk ( LEVEL "[shofer] %d: " format "\n", __LINE__, ##__VA_ARGS__)
 #warning Debug not activated
 #define LOG(format, ...)
 #endif /* SHOFER_DEBUG */
+
+#endif /* SHOFER_C */
+
+/* for ioctl */
+#define SHOFER_IOCTL_TYPE	0x8A /* type, unused by https://www.kernel.org/doc/Documentation/ioctl/ioctl-number.txt */
+#define SHOFER_IOCTL_NR		1 /* serial number */
+#define SHOFER_IOCTL_COPY	1 /* command */
+
+struct shofer_ioctl {
+	unsigned int command;
+	unsigned int count;
+};
+
