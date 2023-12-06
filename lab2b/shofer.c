@@ -22,6 +22,7 @@
 #include <linux/ioctl.h>
 #include <linux/timer.h>
 #include <asm/ioctl.h>
+#include <linux/uaccess.h>
 
 #define SHOFER_C
 #include "config.h"
